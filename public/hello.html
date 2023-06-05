@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://unpkg.com/axios@0.24.0/dist/axios.min.js"></script>
+  <script src="https://unpkg.com/qs@6.10.2/dist/qs.js"></script>
+  <title>Document</title>
+</head>
+<body>
+  <div>蛙叫你NESTJS</div>
+  <script>
+    async function urlParam() {
+        const res = await axios.get('/person/1');
+        console.log(res);            
+        const rs = await axios.get('/person/find', {
+          params: {
+            name: '哇',
+            age: 18
+          }
+        })
+        console.log('query');
+        console.log(rs);
+
+        const r = await axios.post('/person', Qs.stringify({
+          name: '哇',
+          age: 18
+        }),)
+        console.log('rrrr', r);  
+    }
+    urlParam();
+</script>
+</body>
+</html>

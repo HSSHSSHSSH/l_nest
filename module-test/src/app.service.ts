@@ -6,6 +6,6 @@ import { Injectable } from '@nestjs/common';
 export class AppService {
   constructor(private cccService: CccService, private dddService: DddService) {}
   getHello(): string {
-    return 'Hello World!' + this.cccService.ccc() + this.dddService.ddd();
+    return 'Hello World!';
   }
 }

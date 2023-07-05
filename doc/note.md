@@ -1,5 +1,9 @@
 ### 7 多种Provider
 
+- Nest从入口文件开始扫描，递归解析Module依赖，扫描其中的provider、controller，注入它的依赖。全部解析完后，会监听网络端口，开始处理请求。
+
+- 在Nest中，provider多用于指 @Injectable 装饰的服务类，也就是我们常说的服务层。但是，provider不仅仅可以是服务类，还可以是普通的对象，也可以是值，也可以是类，也可以是别名。
+
 - 这些自定义 provider 的方式里，最常用的是 useClass，不过我们一般会用简写，也就是直接指定 class。useClass 的方式由 IOC 容器负责实例化，我们也可以用 useValue、useFactory 直接指定对象。useExisting 只是用来起别名的，有的场景下会用到。
 
 - 注入可通过构造器，也可通过属性
@@ -38,4 +42,6 @@ Nest 在启动的时候，会递归解析 Module 依赖，扫描其中的 provid
 beforeApplicationShutdown 是可以拿到 signal 系统信号的，比如 SIGTERM。
 
 以上所有声明周期函数均支持异步
+
+### 切换不同上下文
 

@@ -1,32 +1,84 @@
+
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Document</title>
-    <script src="https://unpkg.com/axios@0.24.0/dist/axios.min.js"></script>
-  </head>
-  <body>
-    <input id="fileInput" type="file" multiple />
-    <script>
-      const fileInput = document.querySelector('#fileInput');
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <div>蛙叫你</div>
+  <h2>单文件上传</h2>
+  <form action="/aaa" method="post" enctype="multipart/form-data">
+    <input type="text" name="name" />
+    <input type="file" name="aaa" />
+    <button type="submit">上传</button>
+  </form>
 
-      async function formData2() {
-        const data = new FormData();
-        data.set('name', '光');
-        data.set('age', 20);
-        [...fileInput.files].forEach((item) => {
-          data.append('bbb', item);
-        });
+  <h2>多文件上传</h2>
+  <form action="/bbb" method="post" enctype="multipart/form-data">
+    <input type="text" name="name" />
+    <input type="file" name="bbb" multiple />
+    <button type="submit">上传</button>
+  </form>
+  <h2>手动上传</h2>
+  <form action="/manual-upload" method="post" enctype="multipart/form-data">
+    <input type="file" name="file">
+    <button type="submit">上传</button>
+  </form>
+  <h2>文件下载</h2>
+  <div >
+    <!-- <button id="download-link">下载视频文件</button> -->
+    <a href="/uploads/6534f8199727e6b4eaefd8f4240ee6a8">下载视频文件linkkkk</a>
+  </div>
 
-        const res = await axios.post('http://localhost:3000/bbb', data, {
-          headers: { 'content-type': 'multipart/form-data' },
-        });
-        console.log(res);
-      }
+  <!-- <video src="/uploads/6534f8199727e6b4eaefd8f4240ee6a8" controls></video> -->
+</body>
 
-      fileInput.onchange = formData2;
-    </script>
-  </body>
+<script>
+  // 点击下载链接时，触发下载并保存到相册
+  const link = document.getElementById('download-link');
+  link.addEventListener('click', async () => {
+    alert('点击下载链接');
+    try {
+      // 1. 直接下载文件
+      const a = document.createElement('a');
+      a.href = '/uploads/6534f8199727e6b4eaefd8f4240ee6a8?download=1';
+      a.download = 'video.mp4';
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+
+      // 2. 使用 XMLHttpRequest 获取文件内容用于保存到相册
+      const xhr = new XMLHttpRequest();
+      xhr.open('GET', '/uploads/6534f8199727e6b4eaefd8f4240ee6a8', true);
+      xhr.responseType = 'blob';
+      
+      xhr.onload = async function() {
+        if (xhr.status === 200) {
+          const blob = xhr.response;
+          
+          if (navigator.mediaDevices) {
+            if (navigator.canShare && navigator.canShare({ files: [new File([blob], 'video.mp4')] })) {
+              await navigator.share({
+                files: [new File([blob], 'video.mp4')],
+                title: '视频',
+              });
+              alert('文件已下载并保存到相册');
+            } else {
+              alert('文件已下载,但无法保存到相册');
+            }
+          } else {
+            alert('文件已下载,但您的设备不支持保存到相册');
+          }
+        }
+      };
+      
+      xhr.send();
+    } catch (err) {
+      console.error('操作失败:', err);
+      alert('下载或保存失败');
+    }
+  });
+</script>
 </html>
